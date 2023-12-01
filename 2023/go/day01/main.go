@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -20,30 +22,27 @@ func main() {
 func part1(input string) int {
 	lines := strings.Split(input, "\n")
 	ans := 0
+	pattern := `\d`
 	for _, line := range lines {
-		var onesPlace, tensPlace int
-		for _, c := range line {
-			if isInt(c) {
-				tensPlace = int(c - '0')
-				break
-			}
+		re, err := regexp.Compile(pattern)
+		if err != nil {
+			panic(err)
 		}
 
-		for _, c := range reverse(line) {
-			if isInt(c) {
-				onesPlace = int(c - '0')
-				break
-			}
-		}
+		matches := re.FindAllString(line, -1)
+		tensPlace, _ := strconv.Atoi(matches[0])
+		onesPlace, _ := strconv.Atoi(matches[len(matches)-1])
 		ans += onesPlace + tensPlace*10
 	}
 	return ans
 }
 
-func part2(input string) int {
-	lines := strings.Split(input, "\n")
-	ans := 0
-	numStrs := map[string]int{
+func word2int(word string) int {
+	num, e := strconv.Atoi(word)
+	if e == nil {
+		return num
+	}
+	nums := map[string]int{
 		"one":   1,
 		"two":   2,
 		"three": 3,
@@ -54,57 +53,23 @@ func part2(input string) int {
 		"eight": 8,
 		"nine":  9,
 	}
+	return nums[word]
+}
 
-	rNumStrs := map[string]int{
-		"eno":   1,
-		"owt":   2,
-		"eerht": 3,
-		"ruof":  4,
-		"evif":  5,
-		"xis":   6,
-		"neves": 7,
-		"thgie": 8,
-		"enin":  9,
-	}
+func part2(input string) int {
+	lines := strings.Split(input, "\n")
+	ans := 0
+
+	pattern := `\d|one|two|three|four|five|six|seven|eight|nine`
 	for _, line := range lines {
-		var onesPlace, tensPlace int
-
-		for l := 0; l < len(line); l++ {
-			if isInt(rune(line[l])) {
-				tensPlace = int(line[l] - '0')
-				break
-			}
-			r := l + 2
-			for r-l < 6 && r < len(line) {
-				if val, ok := numStrs[line[l:r]]; ok {
-					tensPlace = val
-					break
-				}
-				r++
-			}
-			if tensPlace != 0 {
-				break
-			}
+		re, err := regexp.Compile(pattern)
+		if err != nil {
+			panic(err)
 		}
 
-		rLine := reverse(line)
-		for l := 0; l < len(rLine); l++ {
-			if isInt(rune(rLine[l])) {
-				onesPlace = int(rLine[l] - '0')
-				break
-			}
-			r := l + 2
-			for r-l < 6 && r < len(rLine) {
-				if val, ok := rNumStrs[rLine[l:r]]; ok {
-					onesPlace = val
-					break
-				}
-				r++
-			}
-			if onesPlace != 0 {
-				break
-			}
-		}
+		matches := re.FindAllString(line, -1)
+		tensPlace := word2int(matches[0])
+		onesPlace := word2int(matches[len(matches)-1])
 		ans += onesPlace + tensPlace*10
 	}
 	return ans
