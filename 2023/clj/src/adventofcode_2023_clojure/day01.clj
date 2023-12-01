@@ -16,16 +16,17 @@
         matches (re-seq regex s)]
     (map word-to-number [(first matches) (last matches)])))
 
+(defn text-to-lines [text]
+  (str/split text #"\n"))
+
 (defn part1 [input]
-  (def digits (let [lines (str/split input #"\n")]
-    (map find-first-last-digits lines)))
-  (reduce + (map #(+ (* (first %) 10) (second %)) digits))
+  (let [digits (map find-first-last-digits (text-to-lines input))]
+    (reduce + (map #(+ (* (first %) 10) (second %)) digits)))
 )
 
 (defn part2 [input]
-  (def digits (let [lines (str/split input #"\n")]
-    (map find-first-last-numbers lines)))
-  (reduce + (map #(+ (* (first %) 10) (second %)) digits))
+  (let [digits (map find-first-last-numbers (text-to-lines input))]
+    (reduce + (map #(+ (* (first %) 10) (second %)) digits)))
 )
 
 (defn -main [& args]
