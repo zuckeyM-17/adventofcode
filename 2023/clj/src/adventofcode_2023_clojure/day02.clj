@@ -21,17 +21,27 @@
     (= (count sets) 0))
 )
 
+(defn game-score [game]
+  (->> game
+    (group-by :color)
+    (map (fn [[_, vals]]
+        (apply max (map :num vals))))
+    (reduce *))
+)
+
 (defn part1 [input]
   (let [games (map extract-games (text-to-lines input))]
     (reduce + (map #(if (valid-game? (second %)) (+ (first %) 1) 0) (map-indexed vector games))))
 )
 
-;; (defn part2 [input]
-;; )
+(defn part2 [input]
+  (let [games (map extract-games (text-to-lines input))]
+    (reduce + (map game-score games)))
+)
 
 (defn -main [& args]
   (let [input (slurp input-file)]
     (println (str "part1: " (part1 input)))
-    ;(println (str "part2: " (part2 input)))
+    (println (str "part2: " (part2 input)))
   )
 )
