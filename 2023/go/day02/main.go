@@ -16,7 +16,7 @@ func main() {
 	}
 
 	fmt.Println("part1: ", part1(string(text)))
-	// fmt.Println("part2: ", part2(string(text)))
+	fmt.Println("part2: ", part2(string(text)))
 }
 
 func part1(input string) int {
@@ -50,6 +50,27 @@ func part1(input string) int {
 	return ans
 }
 
-// func part2(input string) int {
+func part2(input string) int {
+	lines := strings.Split(input, "\n")
+	ans := 0
 
-// }
+	for _, line := range lines {
+		re, err := regexp.Compile(`(\d{1,2} (blue|red|green))`)
+		if err != nil {
+			panic(err)
+		}
+
+		mp := map[string]int{}
+		matches := re.FindAllString(line, -1)
+		for _, match := range matches {
+			t := strings.Split(match, " ")
+			color := t[1]
+			num, _ := strconv.Atoi(t[0])
+			if v, ok := mp[color]; !ok || num > v {
+				mp[color] = num
+			}
+		}
+		ans += mp["blue"] * mp["red"] * mp["green"]
+	}
+	return ans
+}
