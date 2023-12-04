@@ -7,6 +7,7 @@
 (defn get-char [lines i j] (get (get lines i) j))
 
 (defn is-symbol [c] (contains? (set "*#+-$@%&=/") c))
+(defn is-ast [c] (= c "*"))
 
 (defn contains-true? [coll]
   (boolean (some identity coll))
@@ -49,6 +50,12 @@
     ))
   ))
   (reduce + digits)
+)
+
+(defn part2 [input]
+  (let [lines (text-to-lines input)]
+    ()
+  )
 )
 
 (defn -main [& args]
