@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"strings"
 
 	"github.com/zuckeyM-17/adventofcode/2023/go/util"
@@ -17,6 +18,7 @@ func main() {
 	filename := "input.txt"
 
 	fmt.Println("part1: ", part1(util.ReadFile(filename)))
+	fmt.Println("part2: ", part2(util.ReadFile(filename)))
 }
 
 func extractSeeds(s string) []int {
@@ -65,14 +67,11 @@ func extractRules(s string) []Rule {
 	return res
 }
 
-func min(s []int) int {
-	min := s[0]
-	for _, v := range s {
-		if v < min {
-			min = v
-		}
+func min(a, b int) int {
+	if a < b {
+		return a
 	}
-	return min
+	return b
 }
 
 func part1(input string) int {
@@ -83,10 +82,49 @@ func part1(input string) int {
 		rules := extractRules(v)
 		maps = append(maps, srcToDestMap(rules))
 	}
-	var dests []int
-	for _, m := range seeds {
-		dests = append(dests, applyMaps(maps, m))
+	m := math.MaxInt64
+	for _, num := range seeds {
+		m = min(m, applyMaps(maps, num))
 	}
 
-	return min(dests)
+	return m
+}
+
+type Range struct {
+	start int
+	end   int
+}
+
+func extractSeedRanges(s string) []Range {
+	var res []Range
+	var nums []int
+	for i, v := range strings.Split(s, " ") {
+		if i == 0 {
+			continue
+		}
+		nums = append(nums, util.Atoi(v))
+	}
+
+	for i := 0; i < len(nums); i += 2 {
+		res = append(res, Range{start: nums[i], end: nums[i] + nums[i+1] - 1})
+	}
+	return res
+}
+
+func part2(input string) int {
+	blocks := strings.Split(input, "\n\n")
+	ranges := extractSeedRanges(blocks[0])
+	var maps []func(int) int
+	for _, v := range blocks[1:] {
+		rules := extractRules(v)
+		maps = append(maps, srcToDestMap(rules))
+	}
+
+	m := math.MaxInt64
+	for _, r := range ranges {
+		for i := r.start; i <= r.end; i++ {
+			m = min(m, applyMaps(maps, i))
+		}
+	}
+	return m
 }

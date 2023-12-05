@@ -14,6 +14,7 @@ type Case struct {
 func TestPart1(t *testing.T) {
 	cases := []Case{
 		{35, part1(util.ReadFile("test.txt"))},
+		{389056265, part1(util.ReadFile("input.txt"))},
 	}
 
 	t.Run("part1", func(t *testing.T) {
@@ -26,18 +27,18 @@ func TestPart1(t *testing.T) {
 	})
 }
 
-// func TestPart2(t *testing.T) {
-// 	cases := []Case{
-// 		{30, part2(util.ReadFile("test.txt"))},
-// 		// {79844424, part2(util.ReadFile("input.txt"))},
-// 	}
+func TestPart2(t *testing.T) {
+	cases := []Case{
+		{46, part2(util.ReadFile("test.txt"))},
+		{137516820, part2(util.ReadFile("input.txt"))},
+	}
 
-// 	t.Run("part2", func(t *testing.T) {
-// 		for _, c := range cases {
-// 			got, want := c.got, c.want
-// 			if got != want {
-// 				t.Errorf("got %d want %d", got, want)
-// 			}
-// 		}
-// 	})
-// }
+	t.Run("part2", func(t *testing.T) {
+		for _, c := range cases {
+			got, want := c.got, c.want
+			if got != want {
+				t.Errorf("got %d want %d", got, want)
+			}
+		}
+	})
+}
