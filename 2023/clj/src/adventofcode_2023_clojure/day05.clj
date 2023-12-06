@@ -37,14 +37,37 @@
 
 (defn part1 [input]
   (def blocks (text-to-blocks input))
-  (def seeds (extract-seeds (first blocks)))
   (let [seeds (extract-seeds (first blocks))
         maps (map create-map (map extract-rules (rest blocks)))]
         (apply min (map #(apply-maps maps %) seeds)))
 )
 
+(defn ranges-to-nums [ranges]
+  (->> ranges
+    (map #(range (% :start) (% :end)))
+    (flatten)
+  ))
+
+(defn extract-seed-ranges [str]
+  (->> (str/split str #" ")
+    (rest)
+    (map #(bigint %))
+    (partition 2)
+    (map (fn [p]
+      { :start (first p), :end (+ (first p) (last p) ) }
+    ))
+  ))
+
+(defn part2 [input]
+  (def blocks (text-to-blocks input))
+  (let [ranges (extract-seed-ranges (first blocks))
+        maps (map create-map (map extract-rules (rest blocks)))]
+        (apply min (map #(apply-maps maps %) (ranges-to-nums ranges))))
+)
+
 (defn -main [& args]
   (let [input (slurp input-file)]
     (println (str "part1: " (part1 input)))
+    (println (str "part2: " (part2 input)))
   )
 )

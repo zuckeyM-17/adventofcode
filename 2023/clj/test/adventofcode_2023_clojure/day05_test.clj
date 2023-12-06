@@ -11,8 +11,8 @@
                         389056265 input-data)
 )
 
-;; (deftest part2-test
-;;   (are [expected input] (= expected (part2 input))
-;;                         2286 test-data
-;;                         71274 input-data)
-;; )
+(deftest part2-test
+  (are [expected input] (= expected (part2 input))
+                        46 test-data
+                        137516820 input-data)
+)
