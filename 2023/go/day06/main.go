@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"regexp"
+	"strings"
 
 	"github.com/zuckeyM-17/adventofcode/2023/go/util"
 )
@@ -16,7 +17,7 @@ func main() {
 	filename := "input.txt"
 
 	fmt.Println("part1: ", part1(util.ReadFile(filename)))
-	// fmt.Println("part2: ", part2(util.ReadFile(filename)))
+	fmt.Println("part2: ", part2(util.ReadFile(filename)))
 }
 
 func extractNums(s string) []int {
@@ -51,4 +52,18 @@ func part1(input string) int {
 	}
 
 	return ans
+}
+
+func extractNum(s string) int {
+	re, err := regexp.Compile(`(\d+)`)
+	if err != nil {
+		panic(err)
+	}
+	return util.Atoi(strings.Join(re.FindAllString(s, -1), ""))
+}
+
+func part2(input string) int {
+	lines := util.SplitLines(input)
+	time, dist := extractNum(lines[0]), extractNum(lines[1])
+	return countRace(race{time, dist})
 }
