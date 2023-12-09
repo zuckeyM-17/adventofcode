@@ -23,10 +23,6 @@ func SplitByEmptyLines(text string) []string {
 	return strings.Split(text, "\n\n")
 }
 
-func SplitBySpace(text string) []string {
-	return strings.Split(text, " ")
-}
-
 func Atoi(s string) int {
 	num, err := strconv.Atoi(s)
 	if err != nil {
