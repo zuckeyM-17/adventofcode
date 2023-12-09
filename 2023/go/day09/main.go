@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/zuckeyM-17/adventofcode/2023/go/util"
 )
@@ -22,6 +23,22 @@ func allZero(slice []int) bool {
 	return true
 }
 
+func calcDiff(slice []int) []int {
+	diff := make([]int, len(slice)-1)
+	for i := 0; i < len(slice)-1; i++ {
+		diff[i] = slice[i+1] - slice[i]
+	}
+	return diff
+}
+
+func extractNums(text string) []int {
+	res := []int{}
+	for _, n := range strings.Split(text, " ") {
+		res = append(res, util.Atoi(n))
+	}
+	return res
+}
+
 func part1(input string) int {
 	lines := util.SplitLines(input)
 
@@ -29,15 +46,9 @@ func part1(input string) int {
 	for _, line := range lines {
 		s := make([][]int, len(line)-1)
 		i := 0
-		s[i] = make([]int, len(util.SplitBySpace(line)))
-		for j, n := range util.SplitBySpace(line) {
-			s[i][j] = util.Atoi(n)
-		}
+		s[i] = extractNums(line)
 		for !allZero(s[i]) {
-			s[i+1] = make([]int, len(s[i])-1)
-			for j := 0; j < len(s[i])-1; j++ {
-				s[i+1][j] = s[i][j+1] - s[i][j]
-			}
+			s[i+1] = calcDiff(s[i])
 			i++
 		}
 		t := 0
@@ -57,15 +68,9 @@ func part2(input string) int {
 	for _, line := range lines {
 		s := make([][]int, len(line)-1)
 		i := 0
-		s[i] = make([]int, len(util.SplitBySpace(line)))
-		for j, n := range util.SplitBySpace(line) {
-			s[i][j] = util.Atoi(n)
-		}
+		s[i] = extractNums(line)
 		for !allZero(s[i]) {
-			s[i+1] = make([]int, len(s[i])-1)
-			for j := 0; j < len(s[i])-1; j++ {
-				s[i+1][j] = s[i][j+1] - s[i][j]
-			}
+			s[i+1] = calcDiff(s[i])
 			i++
 		}
 		t := 0
